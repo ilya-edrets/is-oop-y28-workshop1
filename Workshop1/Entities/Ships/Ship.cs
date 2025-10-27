@@ -3,7 +3,7 @@ using Workshop1.Entities.Sailors;
 
 namespace Workshop1.Entities.Ships
 {
-    public abstract class Ship : IDamagable
+    public abstract class Ship : IDamagable, IPrototype<Ship>
     {
         private readonly List<Person> _crew;
 
@@ -21,16 +21,9 @@ namespace Workshop1.Entities.Ships
 
         public void TakeDamage(IDamageSource source)
         {
-
+            throw new NotImplementedException();
         }
 
-        public void TakeMissleDamage(Missile missile)
-        {
-            HealthPoints -= missile.Payload;
-            if(missile.ExplosionRadius > 0.5)
-            {
-                _crew.RemoveAt(0);
-            }
-        }
+        public abstract Ship Clone();
     }
 }

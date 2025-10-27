@@ -1,4 +1,5 @@
-﻿using Workshop1.Entities.Buildings;
+﻿using Workshop1.Builders;
+using Workshop1.Entities.Buildings;
 using Workshop1.Entities.Ships;
 
 namespace Workshop1
@@ -6,10 +7,9 @@ namespace Workshop1
     public class World
     {
         private readonly List<Ship> enemies = new List<Ship>();
-        private IEnemiesFactory _enemiesFactory;
 
         // Простая релизация синглтона через Lazy.
-        // Все проблемы многопоточки Lazy решает под капотом
+        // Lazy решает под капотом все проблемы связанные с многопоточностью
         private static readonly Lazy<World> _world = new Lazy<World>(() => new World());
         public static World Insatance => _world.Value;
 
@@ -21,18 +21,16 @@ namespace Workshop1
 
         public IReadOnlyCollection<Ship> Enemies => enemies;
 
-        public IReadOnlyCollection<Lighthouse> Lighthouses { get; set; }
+        public IReadOnlyCollection<Lighthouse> Lighthouses { get; set; } = new List<Lighthouse>();
 
-        public IReadOnlyCollection<Fortress> Fortresses { get; set; }
+        public IReadOnlyCollection<Fortress> Fortresses { get; set; } = new List<Fortress>();
 
         // Из-за использования паттерна Синглтон,
         // мы потеряли возможность передавать зависимости через конструктор.
         // Внедрение зависимостей через метод тоже считается одной из реализаций IoC,
         // но это приводит к проблеме, что пока не вызван Init объект World имеет невалидное состояние.
-        public void Init(IEnemiesFactory enemiesFactory)
+        public void Init(IEnemyFactory lightEnemiesFactory, IEnemyFactory mediumEnemiesFactory, IEnemyFactory heavyEnemiesFactory)
         {
-            _enemiesFactory = enemiesFactory;
-
             for (int i = 0; i < 10; i++)
             {
                 // В этом методе видно, что объект World
@@ -40,22 +38,22 @@ namespace Workshop1
                 // Он является только её потребителем - вызывает методы Create
                 // Настройка фабрики выполняется за пределами потребителей
                 // 
-                // Если вместо внедрения объекта IEnemiesFactory сделать три абстрактных метода:
+                // Если вместо внедрения объектов IEnemyFactory сделать три абстрактных метода:
                 // - public abstract Ship CreateLightShip()
                 // - public abstract Ship CreateMediumShip()
                 // - public abstract Ship CreateHeavyShip()
                 // то мы получим паттерн Фабричный метод
-                enemies.Add(_enemiesFactory.CreateLightShip());
+                enemies.Add(lightEnemiesFactory.CreateShip());
             }
 
             for (int i = 0; i < 10; i++)
             {
-                enemies.Add(_enemiesFactory.CreateMediumShip());
+                enemies.Add(mediumEnemiesFactory.CreateShip());
             }
 
             for (int i = 0; i < 10; i++)
             {
-                enemies.Add(_enemiesFactory.CreateHeavyShip());
+                enemies.Add(heavyEnemiesFactory.CreateShip());
             }
         }
 

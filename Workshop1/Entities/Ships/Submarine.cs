@@ -20,7 +20,7 @@ namespace Workshop1.Entities.Ships
             Weapon.Fire(damagable);
         }
 
-        public Submarine Clone()
+        public override Submarine Clone()
         {
             // Создает поверхностную копию
             // В большинстве случаев использование MemberwiseClone будет ошибкой

@@ -8,7 +8,7 @@ namespace Workshop1.Entities.Ships
         {
         }
 
-        public Raft Clone()
+        public override Raft Clone()
         {
             // Создает поверхностную копию
             // В большинстве случаев использование MemberwiseClone будет ошибкой

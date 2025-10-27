@@ -11,7 +11,7 @@ namespace Workshop1.Entities.Ships
             Armor = armor;
         }
 
-        public Boat Clone()
+        public override Boat Clone()
         {
             // Создает поверхностную копию
             // В большинстве случаев использование MemberwiseClone будет ошибкой

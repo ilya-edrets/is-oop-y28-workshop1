@@ -10,7 +10,7 @@
 
         public void ApplyDamage(IDamagable damagable)
         {
-            damagable.TakeDamage(this);
+            throw new NotImplementedException();
         }
     }
 
